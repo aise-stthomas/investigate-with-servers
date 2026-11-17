@@ -47,9 +47,6 @@ Run `uv run reset.py` between mains to start the desk over.
 
 ## Section 2 · Serve a tool
 
-0. **Talk to a server you did not write.** `uv run try_a_public_server.py` sends the discovery
-   methods to DeepWiki's public server and one `tools/call`. Try `--repo` with a public
-   repository you know. Which methods return anything, and which tools does it offer?
 1. **Write a server.** Copy `src/servers/events.py` to `src/servers/shipping.py` and give it
    one tool, `get_shipment(order_id)`, that returns a carrier, a tracking number and a status
    (make them up). Add it to `servers.toml` with an allow list.

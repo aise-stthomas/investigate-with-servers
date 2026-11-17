@@ -12,7 +12,6 @@ and waits for a person when it must.
 uv sync
 cp .env.example .env            # your Gemini key
 uv run reset.py
-uv run try_a_public_server.py   # no key needed: a public MCP server
 uv run main_1_server.py         # no key needed: our payments server
 ```
 
