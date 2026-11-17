@@ -6,7 +6,7 @@ rejects each one on its own."""
 
 VERSION = "2026-07-28"
 SUPPORTED = [VERSION]
-CLIENT_INFO = {"name": "build-a-coding-agent", "version": "0.1.0"}
+CLIENT_INFO = {"name": "investigate-with-servers", "version": "0.1.0"}
 SERVER_KEY = "io.modelcontextprotocol/serverInfo"
 
 # JSON-RPC error codes used here.

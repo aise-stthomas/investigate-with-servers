@@ -1,9 +1,9 @@
 [project]
-name = "build-a-coding-agent"
+name = "investigate-with-servers"
 version = "0.1.0"
-description = "AI Systems Engineering lab: tool servers, workers, durable runs, and a coding agent, from scratch."
+description = "AI Systems Engineering lab: an investigation agent on tool servers, with workers, a plan, and runs that survive being killed."
 requires-python = ">=3.12"
-dependencies = ["python-dotenv>=1.0", "pytest>=8.0"]
+dependencies = ["python-dotenv>=1.0"]
 
 [tool.uv]
 package = false

@@ -1,15 +1,15 @@
-# Lab: build a coding agent
+# Lab: investigate with servers
 
-Tool servers, workers, runs that outlast a process, and a coding agent, each built from the
-same loop. Everything calls the model by plain HTTP and the tool servers by plain JSON-RPC, so
-the code is the wire format.
+An investigation agent at a support desk: tool servers, workers, a plan, and runs that outlast
+a process, each built from the same loop. Everything calls the model by plain HTTP and the
+tool servers by plain JSON-RPC, so the code is the wire format.
 
 ## Setup
 
 ```bash
 uv sync
 cp .env.example .env          # paste your Gemini key
-uv run reset.py               # fresh state and a fresh workspace/
+uv run reset.py               # fresh state
 ```
 
 ## Where everything is
@@ -20,36 +20,30 @@ uv run reset.py               # fresh state and a fresh workspace/
 | `src/mcp/` | the protocol (version 2026-07-28), a server, a client |
 | `src/servers/` | the desk's servers: `orders`, `payments`, `events`, each run by its own team |
 | `src/desk/` | the investigation agent: instructions, workers, the plan, tool search, durable runs |
-| `src/coder/` | the coding agent: its tools, permissions and hooks, project file and skills |
 | `servers.toml` | the servers the desk connects to, with allow lists |
-| `permissions.toml` | the coding agent's deny and allow rules |
 | `data/desk/seed.json` | the desk's orders, charges and tickets |
-| `data/sample-repo/` | the repository the coding agent works on; `reset.py` copies it to `workspace/` |
 | `data/state/` | refunds, runs, approvals, cut results: emptied by `reset.py` |
 
 ## Section 1 · Follow the agents
 
-Run each when the lecture reaches it. Each main is complete; compare it with the one before,
+Run each when the lecture reaches it. Each main is complete. Compare it with the one before,
 for example `diff main_4_workers.py main_5_plan.py`.
 
 | Main | Command | What it adds |
 |---|---|---|
-| 1 | `uv run main_1_server.py` | a tool server and a client; no model |
+| 1 | `uv run main_1_server.py` | a tool server and a client, no model |
 | 2 | `uv run main_2_servers.py` | the loop as a client of every server |
 | 3 | `uv run main_3_curate.py` | only some tools in each request: allow lists and a search |
 | 4 | `uv run main_4_workers.py` | a lead that hands work to workers |
 | 5 | `uv run main_5_plan.py` | a plan the run writes, placed last in each request |
-| 6 | `uv run main_6_checkpoint.py --crash-after 2`, then `uv run resume.py <run_id>` | the run as a row; kill and resume |
+| 6 | `uv run main_6_checkpoint.py --crash-after 2`, then `uv run resume.py <run_id>` | the run as a row, then kill and resume |
 | 7 | `uv run main_7_approval.py`, then `uv run approve.py <run_id>` | a person's approval, as a row |
-| 8 | `uv run main_8_compact.py --budget 3000` | cut long results; summarize old turns |
-| 9 | `uv run main_9_coder.py` | a coding agent |
-| 10 | `uv run main_10_permissions.py` | permissions and hooks around every call |
-| 11 | `uv run reset.py --fixed`, then `uv run main_11_project.py` | the project file, skills, an explorer |
+| 8 | `uv run main_8_compact.py --budget 3000` | cut long results, summarize old turns |
 
 Main 6 also takes `--crash-after-effect issue_refund`: the process exits right after the
 refund, before the checkpoint. Resume it and read the second `issue_refund` result.
 
-Run `uv run reset.py` between mains to start the desk and the workspace over.
+Run `uv run reset.py` between mains to start the desk over.
 
 ## Section 2 · Serve a tool
 
@@ -69,24 +63,7 @@ Run `uv run reset.py` between mains to start the desk and the workspace over.
    function behind an API and prints its URL. Run Main 2 with `PAYMENTS_URL` set to it.
    `./teardown.sh` removes both.
 
-## Section 3 · Build the coding agent
-
-```bash
-uv run reset.py
-```
-
-1. **Add a tool.** Give `Workspace` in `src/coder/tools.py` a `list_tests()` tool that returns
-   the test names in `tests/`. Run Main 9 and see whether it is used.
-2. **Add a rule.** In `permissions.toml`, allow `run(git push*)` for a branch named `agent/*`
-   only. Run Main 10 and answer `y` or `n` when asked. What does the agent do after a no?
-3. **Add a hook.** In `src/coder/guard.py`, add a before-call hook that refuses any `write_file`
-   to `tests/` once a test file exists there. Run Main 11 and look for the refusal.
-4. **Kill a run after its effect.** Run
-   `uv run main_6_checkpoint.py --crash-after-effect issue_refund`, then resume it.
-   How many refunds does the charge have? Which line of which file made that true?
-
 ## Keep
 
-The tokens of the first request in Mains 2 and 3; the lead's and the events worker's largest
-requests in Main 4; the resumed run's second `issue_refund` result; and one command your
-permission rules asked about, with what happened next.
+The tokens of the first request in Mains 2 and 3, the lead's and the events worker's largest
+requests in Main 4, and the resumed run's second `issue_refund` result.

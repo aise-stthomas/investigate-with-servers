@@ -1,8 +1,8 @@
-# build-a-coding-agent
+# investigate-with-servers
 
 AI Systems Engineering lab. An agent at a support desk that reads other teams' systems
 through tool servers, splits its work across workers, writes its run down after every step,
-and waits for a person when it must; then a coding agent built from the same loop.
+and waits for a person when it must.
 
 - No SDK for the model (plain HTTP to the Gemini API) and none for the tool protocol (plain
   JSON-RPC, Model Context Protocol version 2026-07-28), so the code is the wire format.
@@ -10,9 +10,10 @@ and waits for a person when it must; then a coding agent built from the same loo
 
 ```bash
 uv sync
-cp .env.example .env     # your Gemini key
+cp .env.example .env            # your Gemini key
 uv run reset.py
-uv run main_1_server.py  # no key needed for this one
+uv run try_a_public_server.py   # no key needed: a public MCP server
+uv run main_1_server.py         # no key needed: our payments server
 ```
 
 `measure.py` counts what each tool's declaration costs in tokens. Set `WIRE_DIR=<folder>` on

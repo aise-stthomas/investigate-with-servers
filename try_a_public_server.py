@@ -23,7 +23,7 @@ def send(method, params=None):
         **(params or {}),
         "_meta": {"io.modelcontextprotocol/protocolVersion": VERSION,
                   "io.modelcontextprotocol/clientCapabilities": {},
-                  "io.modelcontextprotocol/clientInfo": {"name": "build-a-coding-agent", "version": "0.1.0"}}}}
+                  "io.modelcontextprotocol/clientInfo": {"name": "investigate-with-servers", "version": "0.1.0"}}}}
     headers = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream",
                "MCP-Protocol-Version": VERSION, "Mcp-Method": method}
     if method == "tools/call":
